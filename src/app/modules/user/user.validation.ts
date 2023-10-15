@@ -27,4 +27,29 @@ const validateCreateUser = z.object({
   }),
 })
 
-export const UserValidation = { validateCreateUser }
+const updateUser = z.object({
+  body: z.object({
+    name: z
+      .string({
+        required_error: 'Name is required',
+      })
+      .optional(),
+    contactNo: z
+      .string({
+        required_error: 'ContactNo. is required',
+      })
+      .optional(),
+    address: z
+      .string({
+        required_error: 'Address is required',
+      })
+      .optional(),
+    ProfileImage: z
+      .string({
+        required_error: 'ContactNo. is required',
+      })
+      .optional(),
+  }),
+})
+
+export const UserValidation = { validateCreateUser, updateUser }

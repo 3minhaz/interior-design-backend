@@ -25,4 +25,11 @@ router.get(
   UserController.getSingleUser,
 )
 
+router.patch(
+  '/:id',
+  validateRequest(UserValidation.updateUser),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserController.updateSingleUser,
+)
+
 export const UserRoutes = router

@@ -92,7 +92,7 @@ const getAllUser = async (filters: any, options: IPaginationOptions) => {
   }
 }
 
-export const getSingleUser = async (id: string) => {
+const getSingleUser = async (id: string) => {
   const result = await prisma.user.findUnique({
     where: {
       id,
@@ -101,4 +101,30 @@ export const getSingleUser = async (id: string) => {
   return result
 }
 
-export const UserService = { createUser, getAllUser, getSingleUser }
+const updateSingleUser = async (id: string, payload: Partial<User>) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { email, ...others } = payload
+
+  if (others.password) {
+    const hashPassword = await bcrypt.hash(
+      others.password,
+      Number(config.bcrypt_salt_rounds),
+    )
+    others['password'] = hashPassword
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: others,
+  })
+  return result
+}
+
+export const UserService = {
+  createUser,
+  getAllUser,
+  getSingleUser,
+  updateSingleUser,
+}

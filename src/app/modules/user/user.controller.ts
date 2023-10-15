@@ -18,7 +18,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getAllUser = catchAsync(async (req: Request, res: Response) => {
+const getAllUser = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields)
   const options = pick(req.query, paginationFields)
   const result = await UserService.getAllUser(filters, options)
@@ -31,7 +31,7 @@ export const getAllUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const result = await UserService.getSingleUser(id)
   sendResponse(res, {
@@ -43,4 +43,22 @@ export const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const UserController = { createUser, getAllUser, getSingleUser }
+const updateSingleUser = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const payload = req.body
+  const result = await UserService.updateSingleUser(id, payload)
+  sendResponse(res, {
+    success: true,
+    message: 'Updated single user successfully',
+    statusCode: httpStatus.OK,
+
+    data: result,
+  })
+})
+
+export const UserController = {
+  createUser,
+  getAllUser,
+  getSingleUser,
+  updateSingleUser,
+}
