@@ -31,4 +31,46 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ServiceController = { createService, getAllServices }
+const getSingleService = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const result = await InteriorService.getSingleService(id)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Fetched single services successfully',
+
+    data: result,
+  })
+})
+
+const updateSingleService = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const payload = req.body
+  const result = await InteriorService.updateSingleService(id, payload)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Single service updated successfully',
+
+    data: result,
+  })
+})
+const deleteSingleService = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const result = await InteriorService.deleteSingleService(id)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Single service deleted successfully',
+
+    data: result,
+  })
+})
+
+export const ServiceController = {
+  createService,
+  getAllServices,
+  getSingleService,
+  updateSingleService,
+  deleteSingleService,
+}

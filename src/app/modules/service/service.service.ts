@@ -1,10 +1,10 @@
+import { Service } from '@prisma/client'
 import { paginationHelpers } from '../../../helpers/paginationHelper'
 import { IPaginationOptions } from '../../../interfaces/pagination'
 import prisma from '../../../shared/prisma'
 import { serviceSearchableFields } from './service.constant'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createService = async (data: any) => {
+const createService = async (data: Service) => {
   const result = await prisma.service.create({
     data,
   })
@@ -81,7 +81,38 @@ const getAllServices = async (filters: any, options: IPaginationOptions) => {
   }
 }
 
+const getSingleService = async (id: string) => {
+  const result = await prisma.service.findUnique({
+    where: {
+      id,
+    },
+  })
+  return result
+}
+
+const updateSingleService = async (id: string, payload: Partial<Service>) => {
+  const result = await prisma.service.update({
+    where: {
+      id,
+    },
+    data: payload,
+  })
+  return result
+}
+
+const deleteSingleService = async (id: string) => {
+  const result = await prisma.service.delete({
+    where: {
+      id,
+    },
+  })
+  return result
+}
+
 export const InteriorService = {
   createService,
   getAllServices,
+  getSingleService,
+  updateSingleService,
+  deleteSingleService,
 }
