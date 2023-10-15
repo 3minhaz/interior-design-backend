@@ -122,4 +122,59 @@ const getAllBooking = async (
   }
 }
 
-export const BookingService = { createBooking, getAllBooking }
+const getSingleBooking = async (id: string) => {
+  const result = await prisma.booking.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      service: true,
+    },
+  })
+  return result
+}
+
+const updateBookingStatus = async (id: string, status: string) => {
+  //   const findBooking = await prisma.booking.findFirst({
+  //     where: {
+  //       id,
+  //     },
+  //     include: {
+  //       user: true,
+  //       service: true,
+  //     },
+  //   })
+
+  if (status === 'confirm' || status === 'cancel')
+    // if (findBooking?.bookingStatus === 'pending') {
+    return await prisma.booking.update({
+      where: { id },
+      data: {
+        bookingStatus: status,
+      },
+    })
+  else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'only able to change the status from pending to confirm or cancel',
+    )
+  }
+  // }
+}
+
+const deleteBooking = async (id: string) => {
+  const result = await prisma.booking.delete({
+    where: { id },
+  })
+  return
+  result
+}
+
+export const BookingService = {
+  createBooking,
+  getAllBooking,
+  getSingleBooking,
+  updateBookingStatus,
+  deleteBooking,
+}

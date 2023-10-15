@@ -61,6 +61,7 @@ const getAllServices = async (filters: any, options: IPaginationOptions) => {
     where: whereConditions,
     skip,
     take: limit,
+    include: { reviewsRatings: true },
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
@@ -86,6 +87,7 @@ const getSingleService = async (id: string) => {
     where: {
       id,
     },
+    include: { reviewsRatings: true },
   })
   return result
 }
@@ -95,6 +97,7 @@ const updateSingleService = async (id: string, payload: Partial<Service>) => {
     where: {
       id,
     },
+    include: { reviewsRatings: true },
     data: payload,
   })
   return result

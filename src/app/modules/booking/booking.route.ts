@@ -6,6 +6,25 @@ import { BookingController } from './booking.controller'
 const router = express.Router()
 
 router.post('/', auth(ENUM_USER_ROLE.CUSTOMER), BookingController.createBooking)
+
+router.get(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  BookingController.getSingleBooking,
+)
+
+router.patch(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  BookingController.updateBookingStatus,
+)
+
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  BookingController.deleteBooking,
+)
+
 router.get(
   '/',
   auth(
