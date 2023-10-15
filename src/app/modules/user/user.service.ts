@@ -39,7 +39,7 @@ const createUser = async (data: User) => {
 const getAllUser = async (filters: any, options: IPaginationOptions) => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options)
   const { searchTerm, ...filtersData } = filters
-  console.log(filters)
+
   const andConditions = []
 
   if (searchTerm) {
@@ -121,10 +121,19 @@ const updateSingleUser = async (id: string, payload: Partial<User>) => {
   })
   return result
 }
+const deleteUser = async (id: string) => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  })
+  return result
+}
 
 export const UserService = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
+  deleteUser,
 }
