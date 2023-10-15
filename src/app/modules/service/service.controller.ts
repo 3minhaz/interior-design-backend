@@ -55,6 +55,7 @@ const updateSingleService = catchAsync(async (req: Request, res: Response) => {
     data: result,
   })
 })
+
 const deleteSingleService = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const result = await InteriorService.deleteSingleService(id)

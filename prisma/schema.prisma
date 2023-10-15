@@ -22,7 +22,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   role UserRole @default(CUSTOMER)
+  bookings Booking[]
   @@map("users")
+}
+
+model Booking {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId],references: [id])
+  serviceId String
+  service Service @relation(fields: [serviceId],references: [id])
+  bookingStatus BookingStatus @default(pending)
+  date DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("bookings")
 }
 
 model Service {
@@ -33,6 +48,7 @@ model Service {
   category String
   location String
   price Int
+  bookings Booking[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   serviceStatus ServiceStatus
@@ -48,4 +64,10 @@ enum UserRole {
   SUPER_ADMIN 
   ADMIN
   CUSTOMER 
+}
+
+enum BookingStatus {
+  pending
+  confirm
+  cancel
 }
