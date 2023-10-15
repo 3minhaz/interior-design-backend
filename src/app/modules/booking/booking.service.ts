@@ -1,4 +1,4 @@
-import { Booking } from '@prisma/client'
+import { Booking, BookingStatus } from '@prisma/client'
 import prisma from '../../../shared/prisma'
 import ApiError from '../../../errors/ApiError'
 import httpStatus from 'http-status'
@@ -135,31 +135,46 @@ const getSingleBooking = async (id: string) => {
   return result
 }
 
-const updateBookingStatus = async (id: string, status: string) => {
-  //   const findBooking = await prisma.booking.findFirst({
-  //     where: {
-  //       id,
-  //     },
-  //     include: {
-  //       user: true,
-  //       service: true,
-  //     },
-  //   })
+const updateBookingStatus = async (
+  id: string,
+  status: string,
+  date: string,
+) => {
+  const findBooking = await prisma.booking.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      service: true,
+    },
+  })
+  console.log(date)
+  if (status || date.length > 0) {
+    if (
+      findBooking?.bookingStatus === 'confirm' ||
+      (findBooking?.bookingStatus === 'cancel' && status === 'pending')
+    ) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'only able to change the status from pending to confirm or cancel',
+      )
+    }
 
-  if (status === 'confirm' || status === 'cancel')
-    // if (findBooking?.bookingStatus === 'pending') {
     return await prisma.booking.update({
       where: { id },
       data: {
-        bookingStatus: status,
+        bookingStatus: status ? (status as BookingStatus) : 'pending',
+        date: date ? date : findBooking?.date,
       },
     })
-  else {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'only able to change the status from pending to confirm or cancel',
-    )
   }
+  //  else {
+  //   throw new ApiError(
+  //     httpStatus.BAD_REQUEST,
+  //     'only able to change the status from pending to confirm or cancel',
+  //   )
+  // }
   // }
 }
 
