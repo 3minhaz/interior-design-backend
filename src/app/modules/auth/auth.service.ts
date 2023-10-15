@@ -41,4 +41,24 @@ const loginUser = async (data: ILoginUser) => {
   }
 }
 
-export const AuthService = { loginUser }
+const addAdmin = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist')
+  }
+  const updateUserRole = await prisma.user.update({
+    where: {
+      email: user?.email,
+    },
+    data: {
+      role: 'ADMIN',
+    },
+  })
+  return updateUserRole
+}
+
+export const AuthService = { loginUser, addAdmin }

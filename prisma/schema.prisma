@@ -14,11 +14,34 @@ datasource db {
 model User {
   id String @id @default(uuid())
   email String @unique
-  password String
-  role UserRole @default(CUSTOMER)
+  password String  
+  name String
+  contactNo String
+  address String
+  ProfileImage String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  role UserRole @default(CUSTOMER)
   @@map("users")
+}
+
+model Service {
+  id String @id @default(uuid())
+  title String 
+  description String 
+  image String?
+  category String
+  location String
+  price Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  serviceStatus ServiceStatus
+  @@map("services")
+}
+
+enum ServiceStatus {
+  Available
+  Upcoming
 }
 
 enum UserRole {

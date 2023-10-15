@@ -24,4 +24,16 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const AuthController = { loginUser }
+const addAdmin = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const result = await AuthService.addAdmin(id)
+
+  sendResponse(res, {
+    success: true,
+    message: 'User role to admin added successfully',
+    statusCode: httpStatus.OK,
+    data: result,
+  })
+})
+
+export const AuthController = { loginUser, addAdmin }
