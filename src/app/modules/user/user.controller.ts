@@ -68,10 +68,39 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { id } = req.user as any
+
+  const result = await UserService.getMyProfile(id)
+  sendResponse(res, {
+    success: true,
+    message: 'My profile fetched successfully',
+    statusCode: httpStatus.OK,
+    data: result,
+  })
+})
+
+const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { id } = req.user as any
+  const data = req.body
+  console.log(id, 'checking id')
+  const result = await UserService.updateMyProfile(id, data)
+  sendResponse(res, {
+    success: true,
+    message: 'My profile updated successfully',
+    statusCode: httpStatus.OK,
+    data: result,
+  })
+})
+
 export const UserController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteUser,
+  getMyProfile,
+  updateMyProfile,
 }

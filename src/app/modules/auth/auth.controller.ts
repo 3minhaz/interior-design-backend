@@ -36,4 +36,41 @@ const addAdmin = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const AuthController = { loginUser, addAdmin }
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies
+
+  const result = await AuthService.refreshToken(refreshToken)
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User logged in successfully !',
+    data: result,
+  })
+})
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { id } = req.user as any
+  const { previousPassword, newPassword } = req.body
+
+  const result = await AuthService.changePassword(
+    id,
+    previousPassword,
+    newPassword,
+  )
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Change password successfully !',
+    data: result,
+  })
+})
+
+export const AuthController = {
+  loginUser,
+  addAdmin,
+  refreshToken,
+  changePassword,
+}

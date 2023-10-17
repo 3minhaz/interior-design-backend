@@ -151,15 +151,15 @@ const updateBookingStatus = async (
   })
   console.log(date)
   if (status || date.length > 0) {
-    if (
-      findBooking?.bookingStatus === 'confirm' ||
-      (findBooking?.bookingStatus === 'cancel' && status === 'pending')
-    ) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        'only able to change the status from pending to confirm or cancel',
-      )
-    }
+    // if (
+    //   findBooking?.bookingStatus === 'confirm' ||
+    //   (findBooking?.bookingStatus === 'cancel' && status === 'pending')
+    // ) {
+    //   throw new ApiError(
+    //     httpStatus.BAD_REQUEST,
+    //     'only able to change the status from pending to confirm or cancel',
+    //   )
+    // }
 
     return await prisma.booking.update({
       where: { id },

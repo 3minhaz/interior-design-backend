@@ -130,10 +130,51 @@ const deleteUser = async (id: string) => {
   return result
 }
 
+const getMyProfile = async (id: string) => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
+  return result
+}
+
+const updateMyProfile = async (id: string, data: Partial<User>) => {
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not exist')
+  }
+  if (data?.password) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Please remove the password field',
+    )
+  }
+  if (data?.role) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Please remove the role field')
+  }
+  if (data?.email) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Please remove the email field')
+  }
+  const updateProfile = await prisma.user.update({
+    where: {
+      id,
+    },
+    data,
+  })
+  return updateProfile
+}
+
 export const UserService = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteUser,
+  getMyProfile,
+  updateMyProfile,
 }
