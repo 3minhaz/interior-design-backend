@@ -19,15 +19,17 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { role } = req.user as any
   const filters = pick(req.query, userFilterableFields)
   const options = pick(req.query, paginationFields)
-  const result = await UserService.getAllUser(filters, options)
+  const result = await UserService.getAllUser(filters, options, role)
   sendResponse(res, {
     success: true,
     message: 'Fetched users successfully',
     statusCode: httpStatus.OK,
-    meta: result.meta,
-    data: result.data,
+    meta: result!.meta,
+    data: result!.data,
   })
 })
 
@@ -37,6 +39,17 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     message: 'Fetched single user successfully',
+    statusCode: httpStatus.OK,
+
+    data: result,
+  })
+})
+
+const getAllAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getAllAdmin()
+  sendResponse(res, {
+    success: true,
+    message: 'Fetched all admin  successfully',
     statusCode: httpStatus.OK,
 
     data: result,
@@ -85,7 +98,7 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { id } = req.user as any
   const data = req.body
-  console.log(id, 'checking id')
+
   const result = await UserService.updateMyProfile(id, data)
   sendResponse(res, {
     success: true,
@@ -103,4 +116,5 @@ export const UserController = {
   deleteUser,
   getMyProfile,
   updateMyProfile,
+  getAllAdmin,
 }

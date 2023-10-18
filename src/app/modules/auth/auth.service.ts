@@ -8,6 +8,7 @@ import config from '../../../config'
 import { Secret } from 'jsonwebtoken'
 
 const loginUser = async (data: ILoginUser) => {
+  console.log(data.email)
   const user = await prisma.user.findFirst({
     where: {
       email: data.email,

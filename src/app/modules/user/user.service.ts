@@ -7,6 +7,7 @@ import httpStatus from 'http-status'
 import { IPaginationOptions } from '../../../interfaces/pagination'
 import { paginationHelpers } from '../../../helpers/paginationHelper'
 import { userSearchableFields } from './user.constant'
+import { HandleSearchRole } from './user.utils'
 
 const createUser = async (data: User) => {
   if (data.role && (data.role === 'ADMIN' || data.role === 'SUPER_ADMIN')) {
@@ -35,8 +36,12 @@ const createUser = async (data: User) => {
   return result
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getAllUser = async (filters: any, options: IPaginationOptions) => {
+const getAllUser = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filters: any,
+  options: IPaginationOptions,
+  role: string,
+) => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options)
   const { searchTerm, ...filtersData } = filters
 
@@ -66,30 +71,59 @@ const getAllUser = async (filters: any, options: IPaginationOptions) => {
 
   const whereConditions = andConditions.length > 0 ? { AND: andConditions } : {}
 
-  const result = await prisma.user.findMany({
-    where: whereConditions,
-    skip,
-    take: limit,
-    orderBy:
-      options.sortBy && options.sortOrder
-        ? {
-            [options.sortBy]: options.sortOrder,
-          }
-        : {
-            createdAt: 'desc',
-          },
-  })
-
-  const total = await prisma.user.count()
-
-  return {
-    meta: {
-      total,
+  if (role === 'ADMIN') {
+    return await HandleSearchRole(
+      'ADMIN',
+      whereConditions,
       page,
+      skip,
       limit,
-    },
-    data: result,
+      options,
+    )
+  } else if (role === 'SUPER_ADMIN') {
+    return await HandleSearchRole(
+      'SUPER_ADMIN',
+      whereConditions,
+      page,
+      skip,
+      limit,
+      options,
+    )
   }
+  //   const result = await prisma.user.findMany({
+  //     where: { ...whereConditions },
+  //     skip,
+  //     take: limit,
+  //     orderBy:
+  //       options.sortBy && options.sortOrder
+  //         ? {
+  //             [options.sortBy]: options.sortOrder,
+  //           }
+  //         : {
+  //             createdAt: 'desc',
+  //           },
+  //   })
+
+  //   const total = await prisma.user.count()
+
+  //   return {
+  //     meta: {
+  //       total,
+  //       page,
+  //       limit,
+  //     },
+  //     data: result,
+  //   }
+  // }
+}
+
+export const getAllAdmin = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      role: 'ADMIN',
+    },
+  })
+  return result
 }
 
 const getSingleUser = async (id: string) => {
@@ -177,4 +211,5 @@ export const UserService = {
   deleteUser,
   getMyProfile,
   updateMyProfile,
+  getAllAdmin,
 }

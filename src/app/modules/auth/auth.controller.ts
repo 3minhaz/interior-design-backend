@@ -52,6 +52,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 const changePassword = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { id } = req.user as any
+  console.log(req.body)
   const { previousPassword, newPassword } = req.body
 
   const result = await AuthService.changePassword(
