@@ -44,4 +44,15 @@ const insertReview = async (id: string, serviceId: string, reviewData: any) => {
   return result
 }
 
-export const ReviewRatingService = { insertReview, findReview }
+const getAllReview = async () => {
+  const result = await prisma.reviewsRating.findMany({
+    where: {},
+    include: {
+      service: true,
+      users: true,
+    },
+  })
+  return result
+}
+
+export const ReviewRatingService = { insertReview, findReview, getAllReview }

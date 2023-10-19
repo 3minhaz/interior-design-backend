@@ -33,4 +33,15 @@ const findReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ReviewRatingController = { insertReview, findReview }
+const getAllReview = catchAsync(async (req: Request, res: Response) => {
+  const result = await ReviewRatingService.getAllReview()
+
+  sendResponse(res, {
+    success: true,
+    message: 'Review fetched successfully',
+    statusCode: httpStatus.OK,
+    data: result,
+  })
+})
+
+export const ReviewRatingController = { insertReview, findReview, getAllReview }

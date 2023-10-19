@@ -11,6 +11,8 @@ router.get(
   ReviewRatingController.findReview,
 )
 
+router.get('/', ReviewRatingController.getAllReview)
+
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.CUSTOMER),
