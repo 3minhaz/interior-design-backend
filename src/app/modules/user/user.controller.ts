@@ -57,9 +57,11 @@ const getAllAdmin = catchAsync(async (req: Request, res: Response) => {
 })
 
 const updateSingleUser = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { role } = req.user as any
   const id = req.params.id
   const payload = req.body
-  const result = await UserService.updateSingleUser(id, payload)
+  const result = await UserService.updateSingleUser(id, role, payload)
   sendResponse(res, {
     success: true,
     message: 'Updated single user successfully',

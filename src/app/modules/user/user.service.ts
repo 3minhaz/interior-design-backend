@@ -135,7 +135,11 @@ const getSingleUser = async (id: string) => {
   return result
 }
 
-const updateSingleUser = async (id: string, payload: Partial<User>) => {
+const updateSingleUser = async (
+  id: string,
+  role: string,
+  payload: Partial<User>,
+) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { email, ...others } = payload
 
@@ -147,6 +151,9 @@ const updateSingleUser = async (id: string, payload: Partial<User>) => {
     others['password'] = hashPassword
   }
 
+  if (role !== 'SUPER_ADMIN') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Please remove the role')
+  }
   const result = await prisma.user.update({
     where: {
       id,
