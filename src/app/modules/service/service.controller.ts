@@ -32,6 +32,18 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const getByCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await InteriorService.getByCategory()
+  // console.log('checking from category', result)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Category data fetched successfully',
+
+    data: result,
+  })
+})
+
 const getSingleService = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const result = await InteriorService.getSingleService(id)
@@ -75,4 +87,5 @@ export const ServiceController = {
   getSingleService,
   updateSingleService,
   deleteSingleService,
+  getByCategory,
 }

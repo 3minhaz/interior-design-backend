@@ -94,6 +94,31 @@ const getSingleService = async (id: string) => {
   return result
 }
 
+const getByCategory = async () => {
+  const uniqueCategories = await prisma.service.findMany({
+    distinct: ['category'],
+    select: {
+      category: true,
+    },
+  })
+
+  const uniqueCategoryData = []
+
+  for (const categoryInfo of uniqueCategories) {
+    const result = await prisma.service.findFirst({
+      where: {
+        category: categoryInfo.category,
+      },
+    })
+
+    if (result) {
+      uniqueCategoryData.push(result)
+    }
+  }
+
+  return uniqueCategoryData
+}
+
 const updateSingleService = async (id: string, payload: Partial<Service>) => {
   const result = await prisma.service.update({
     where: {
@@ -131,4 +156,5 @@ export const InteriorService = {
   getSingleService,
   updateSingleService,
   deleteSingleService,
+  getByCategory,
 }

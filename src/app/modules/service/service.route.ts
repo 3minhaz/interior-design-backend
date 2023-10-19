@@ -12,6 +12,7 @@ router.post(
 )
 
 router.get('/', ServiceController.getAllServices)
+router.get('/category', ServiceController.getByCategory)
 
 router.get('/:id', ServiceController.getSingleService)
 router.patch(

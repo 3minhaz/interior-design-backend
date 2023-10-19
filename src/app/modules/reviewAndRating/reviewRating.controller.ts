@@ -18,4 +18,19 @@ const insertReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ReviewRatingController = { insertReview }
+const findReview = catchAsync(async (req: Request, res: Response) => {
+  const serviceId = req.params.id
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { id } = req.user as any
+
+  const result = await ReviewRatingService.findReview(id, serviceId)
+
+  sendResponse(res, {
+    success: true,
+    message: 'Review fetched successfully',
+    statusCode: httpStatus.OK,
+    data: result,
+  })
+})
+
+export const ReviewRatingController = { insertReview, findReview }
