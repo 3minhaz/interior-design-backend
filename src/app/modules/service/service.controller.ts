@@ -19,6 +19,7 @@ const createService = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getAllServices = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.query, 'checking query')
   const filters = pick(req.query, serviceFilterableFields)
   const options = pick(req.query, paginationFields)
   const result = await InteriorService.getAllServices(filters, options)
